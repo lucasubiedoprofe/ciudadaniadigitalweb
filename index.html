@@ -773,6 +773,19 @@
       Explora nuestra colección de juegos interactivos diseñados para desarrollar
       competencias digitales esenciales. Aprende jugando, a tu ritmo.
     </p>
+    <div class="hero-stats" aria-label="Estadísticas del portal">
+      <div class="hero-stat">
+        <span class="hero-stat-n" id="stat-games">—</span>
+        <span class="hero-stat-l">Juegos</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-n">5</span>
+        <span class="hero-stat-l">Temáticas</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-n">∞</span>
+        <span class="hero-stat-l">Aprendizaje</span>
+      </div>
     </div>
   </section>
 
@@ -882,16 +895,16 @@
 
 <!-- Update hero stat once games load -->
 <script>
-  const _origRender = window.renderGrid;
-  // Patch result count to also update hero stat
-  const _statEl = document.getElementById('stat-games');
-  const _obs = new MutationObserver(() => {
-    const cards = document.querySelectorAll('.game-card');
-    if (cards.length > 0 && _statEl.textContent === '—') {
-      _statEl.textContent = cards.length;
-    }
+  document.addEventListener('DOMContentLoaded', () => {
+    const statEl = document.getElementById('stat-games');
+    const gridEl = document.getElementById('game-grid');
+    if (!statEl || !gridEl) return;
+    const obs = new MutationObserver(() => {
+      const count = gridEl.querySelectorAll('.game-card').length;
+      if (count > 0) statEl.textContent = count;
+    });
+    obs.observe(gridEl, { childList: true });
   });
-  _obs.observe(document.getElementById('game-grid'), { childList: true });
 </script>
 </body>
 </html>

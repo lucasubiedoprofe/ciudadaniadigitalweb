@@ -90,18 +90,130 @@ function initParticles() {
   draw();
 }
 
+// ─── Inline fallback data (used if games.json cannot be fetched) ───────────────
+const FALLBACK_GAMES = [
+  {
+    "id": 1,
+    "title": "Desafío de Ciberseguridad",
+    "description": "Un juego interactivo donde aprenderás a identificar amenazas digitales, crear contraseñas robustas y detectar intentos de phishing en situaciones de la vida real.",
+    "tags": ["Ciberseguridad", "Contraseñas", "Phishing"],
+    "playtime": "15 min",
+    "difficulty": "Media",
+    "thumbnail": "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=600&q=80",
+    "screenshot": "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=1200&q=90",
+    "geniallyUrl": "https://view.genially.com/example1"
+  },
+  {
+    "id": 2,
+    "title": "Guardianes de la Privacidad",
+    "description": "Explora el mundo de la privacidad en línea y aprende qué datos personales debes proteger. Toma decisiones en tiempo real sobre permisos de aplicaciones y configuraciones de redes sociales.",
+    "tags": ["Privacidad", "Datos Personales", "Redes Sociales"],
+    "playtime": "20 min",
+    "difficulty": "Fácil",
+    "thumbnail": "https://images.unsplash.com/photo-1563986768609-322da13575f3?w=600&q=80",
+    "screenshot": "https://images.unsplash.com/photo-1563986768609-322da13575f3?w=1200&q=90",
+    "geniallyUrl": "https://view.genially.com/example2"
+  },
+  {
+    "id": 3,
+    "title": "El Arte de la Netiqueta",
+    "description": "Navega situaciones sociales en el mundo digital y aprende las reglas no escritas de la comunicación en línea. Desde foros y correos hasta redes sociales.",
+    "tags": ["Netiqueta", "Comunicación", "Respeto Digital"],
+    "playtime": "12 min",
+    "difficulty": "Fácil",
+    "thumbnail": "https://images.unsplash.com/photo-1516321497487-e288fb19713f?w=600&q=80",
+    "screenshot": "https://images.unsplash.com/photo-1516321497487-e288fb19713f?w=1200&q=90",
+    "geniallyUrl": "https://view.genially.com/example3"
+  },
+  {
+    "id": 4,
+    "title": "Derechos en la Red",
+    "description": "Un recorrido interactivo por los derechos y responsabilidades que tienes como usuario de internet. Aprende sobre propiedad intelectual y libertad de expresión responsable.",
+    "tags": ["Derechos Digitales", "Propiedad Intelectual", "Ética"],
+    "playtime": "25 min",
+    "difficulty": "Alta",
+    "thumbnail": "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=600&q=80",
+    "screenshot": "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=1200&q=90",
+    "geniallyUrl": "https://view.genially.com/example4"
+  },
+  {
+    "id": 5,
+    "title": "Detector de Fake News",
+    "description": "Conviértete en un detective de la información y aprende a distinguir noticias verdaderas de falsas. Analiza fuentes y desarrolla el pensamiento crítico necesario.",
+    "tags": ["Desinformación", "Pensamiento Crítico", "Fuentes"],
+    "playtime": "18 min",
+    "difficulty": "Media",
+    "thumbnail": "https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=600&q=80",
+    "screenshot": "https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=1200&q=90",
+    "geniallyUrl": "https://view.genially.com/example5"
+  },
+  {
+    "id": 6,
+    "title": "Huella Digital: Tu Legado Online",
+    "description": "Descubre cómo cada acción en línea deja una marca permanente. Aprende a gestionar tu identidad digital y proteger tu reputación a largo plazo.",
+    "tags": ["Huella Digital", "Identidad Online", "Reputación"],
+    "playtime": "22 min",
+    "difficulty": "Media",
+    "thumbnail": "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=600&q=80",
+    "screenshot": "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=1200&q=90",
+    "geniallyUrl": "https://view.genially.com/example6"
+  },
+  {
+    "id": 7,
+    "title": "Seguridad en Redes WiFi",
+    "description": "Aprende a conectarte de forma segura en redes públicas y privadas. Explora los riesgos de las redes abiertas y las mejores prácticas para proteger tus dispositivos.",
+    "tags": ["Ciberseguridad", "WiFi", "VPN"],
+    "playtime": "14 min",
+    "difficulty": "Media",
+    "thumbnail": "https://images.unsplash.com/photo-1544197150-b99a580bb7a8?w=600&q=80",
+    "screenshot": "https://images.unsplash.com/photo-1544197150-b99a580bb7a8?w=1200&q=90",
+    "geniallyUrl": "https://view.genially.com/example7"
+  },
+  {
+    "id": 8,
+    "title": "Convivencia Digital",
+    "description": "Un simulador de situaciones de ciberacoso y conflictos en línea. Aprende a identificar, prevenir y actuar ante el bullying digital y desarrolla empatía.",
+    "tags": ["Ciberacoso", "Empatía", "Convivencia"],
+    "playtime": "30 min",
+    "difficulty": "Alta",
+    "thumbnail": "https://images.unsplash.com/photo-1573164713714-d95e436ab8d6?w=600&q=80",
+    "screenshot": "https://images.unsplash.com/photo-1573164713714-d95e436ab8d6?w=1200&q=90",
+    "geniallyUrl": "https://view.genially.com/example8"
+  }
+];
+
 // ─── Fetch Games ──────────────────────────────────────────────────────────────
 async function loadGames() {
   showLoader(true);
   try {
-    const res = await fetch('./games.json');
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    state.games = await res.json();
+    // Try multiple path variants to handle different hosting setups
+    const paths = ['./games.json', 'games.json', '/games.json'];
+    let loaded = false;
+    for (const path of paths) {
+      try {
+        const res = await fetch(path);
+        if (res.ok) {
+          const contentType = res.headers.get('content-type') || '';
+          if (contentType.includes('json') || contentType.includes('text')) {
+            state.games = await res.json();
+            loaded = true;
+            break;
+          }
+        }
+      } catch (_) { /* try next path */ }
+    }
+    if (!loaded) {
+      console.info('games.json not found via fetch — using built-in data.');
+      state.games = FALLBACK_GAMES;
+    }
     state.filtered = [...state.games];
     renderGrid(state.filtered);
   } catch (err) {
-    console.error('Error loading games.json:', err);
-    showErrorState();
+    console.error('Unexpected error in loadGames:', err);
+    // Last resort: always show something
+    state.games = FALLBACK_GAMES;
+    state.filtered = [...state.games];
+    renderGrid(state.filtered);
   } finally {
     showLoader(false);
   }
