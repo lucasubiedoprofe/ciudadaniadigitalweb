@@ -2,6 +2,7 @@
   {
     "id": 1,
     "title": "Desafío de Ciberseguridad",
+    "author": "Nombre Apellido",
     "description": "Un juego interactivo donde aprenderás a identificar amenazas digitales, crear contraseñas robustas y detectar intentos de phishing en situaciones de la vida real. Pon a prueba tus reflejos digitales en una serie de escenarios desafiantes.",
     "tags": ["Ciberseguridad", "Contraseñas", "Phishing"],
     "playtime": "15 min",
@@ -13,6 +14,7 @@
   {
     "id": 2,
     "title": "Guardianes de la Privacidad",
+    "author": "Nombre Apellido",
     "description": "Explora el mundo de la privacidad en línea y aprende qué datos personales debes proteger. Toma decisiones en tiempo real sobre permisos de aplicaciones, configuraciones de redes sociales y el valor de tu información personal.",
     "tags": ["Privacidad", "Datos Personales", "Redes Sociales"],
     "playtime": "20 min",
@@ -20,71 +22,5 @@
     "thumbnail": "https://images.unsplash.com/photo-1563986768609-322da13575f3?w=600&q=80",
     "screenshot": "https://images.unsplash.com/photo-1563986768609-322da13575f3?w=1200&q=90",
     "geniallyUrl": "https://view.genially.com/example2"
-  },
-  {
-    "id": 3,
-    "title": "El Arte de la Netiqueta",
-    "description": "Navega situaciones sociales en el mundo digital y aprende las reglas no escritas de la comunicación en línea. Desde foros y correos hasta redes sociales, descubre cómo ser un ciudadano digital ejemplar.",
-    "tags": ["Netiqueta", "Comunicación", "Respeto Digital"],
-    "playtime": "12 min",
-    "difficulty": "Fácil",
-    "thumbnail": "https://images.unsplash.com/photo-1516321497487-e288fb19713f?w=600&q=80",
-    "screenshot": "https://images.unsplash.com/photo-1516321497487-e288fb19713f?w=1200&q=90",
-    "geniallyUrl": "https://view.genially.com/example3"
-  },
-  {
-    "id": 4,
-    "title": "Derechos en la Red",
-    "description": "Un recorrido interactivo por los derechos y responsabilidades que tienes como usuario de internet. Aprende sobre propiedad intelectual, libertad de expresión responsable y acceso equitativo a la información digital.",
-    "tags": ["Derechos Digitales", "Propiedad Intelectual", "Ética"],
-    "playtime": "25 min",
-    "difficulty": "Alta",
-    "thumbnail": "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=600&q=80",
-    "screenshot": "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=1200&q=90",
-    "geniallyUrl": "https://view.genially.com/example4"
-  },
-  {
-    "id": 5,
-    "title": "Detector de Fake News",
-    "description": "Conviértete en un detective de la información y aprende a distinguir noticias verdaderas de falsas. Analiza fuentes, verifica datos y desarrolla el pensamiento crítico necesario para navegar el ecosistema informativo actual.",
-    "tags": ["Desinformación", "Pensamiento Crítico", "Fuentes"],
-    "playtime": "18 min",
-    "difficulty": "Media",
-    "thumbnail": "https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=600&q=80",
-    "screenshot": "https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=1200&q=90",
-    "geniallyUrl": "https://view.genially.com/example5"
-  },
-  {
-    "id": 6,
-    "title": "Huella Digital: Tu Legado Online",
-    "description": "Descubre cómo cada acción en línea deja una marca permanente. A través de simulaciones interactivas, aprende a gestionar tu identidad digital, proteger tu reputación y entender las consecuencias a largo plazo de tu comportamiento en internet.",
-    "tags": ["Huella Digital", "Identidad Online", "Reputación"],
-    "playtime": "22 min",
-    "difficulty": "Media",
-    "thumbnail": "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=600&q=80",
-    "screenshot": "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=1200&q=90",
-    "geniallyUrl": "https://view.genially.com/example6"
-  },
-  {
-    "id": 7,
-    "title": "Seguridad en Redes WiFi",
-    "description": "Aprende a conectarte de forma segura en redes públicas y privadas. Explora los riesgos de las redes abiertas, el uso de VPN, y las mejores prácticas para proteger tus dispositivos y datos mientras navegas.",
-    "tags": ["Ciberseguridad", "WiFi", "VPN"],
-    "playtime": "14 min",
-    "difficulty": "Media",
-    "thumbnail": "https://images.unsplash.com/photo-1544197150-b99a580bb7a8?w=600&q=80",
-    "screenshot": "https://images.unsplash.com/photo-1544197150-b99a580bb7a8?w=1200&q=90",
-    "geniallyUrl": "https://view.genially.com/example7"
-  },
-  {
-    "id": 8,
-    "title": "Convivencia Digital",
-    "description": "Un simulador de situaciones de ciberacoso y conflictos en línea. Aprende a identificar, prevenir y actuar ante el bullying digital, y desarrolla empatía hacia los demás usuarios de internet.",
-    "tags": ["Ciberacoso", "Empatía", "Convivencia"],
-    "playtime": "30 min",
-    "difficulty": "Alta",
-    "thumbnail": "https://images.unsplash.com/photo-1573164713714-d95e436ab8d6?w=600&q=80",
-    "screenshot": "https://images.unsplash.com/photo-1573164713714-d95e436ab8d6?w=1200&q=90",
-    "geniallyUrl": "https://view.genially.com/example8"
   }
 ]
