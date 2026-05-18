@@ -15,30 +15,30 @@ const state = {
 
 // ─── DOM References ───────────────────────────────────────────────────────────
 const dom = {
-  grid: document.getElementById('game-grid'),
-  searchInput: document.getElementById('search-input'),
-  searchClear: document.getElementById('search-clear'),
-  resultCount: document.getElementById('result-count'),
-  modal: document.getElementById('game-modal'),
-  modalBackdrop: document.getElementById('modal-backdrop'),
-  modalClose: document.getElementById('modal-close'),
-  modalImg: document.getElementById('modal-screenshot'),
-  modalTitle: document.getElementById('modal-title'),
-  modalDesc: document.getElementById('modal-desc'),
-  modalPlaytime: document.getElementById('modal-playtime'),
+  grid:            document.getElementById('game-grid'),
+  searchInput:     document.getElementById('search-input'),
+  searchClear:     document.getElementById('search-clear'),
+  resultCount:     document.getElementById('result-count'),
+  modal:           document.getElementById('game-modal'),
+  modalBackdrop:   document.getElementById('modal-backdrop'),
+  modalClose:      document.getElementById('modal-close'),
+  modalImg:        document.getElementById('modal-screenshot'),
+  modalTitle:      document.getElementById('modal-title'),
+  modalDesc:       document.getElementById('modal-desc'),
+  modalPlaytime:   document.getElementById('modal-playtime'),
   modalDifficulty: document.getElementById('modal-difficulty'),
-  modalTags: document.getElementById('modal-tags'),
-  playBtn: document.getElementById('play-btn'),
-  loader: document.getElementById('loader'),
-  emptyState: document.getElementById('empty-state'),
-  particleCanvas: document.getElementById('particle-canvas'),
+  modalTags:       document.getElementById('modal-tags'),
+  playBtn:         document.getElementById('play-btn'),
+  loader:          document.getElementById('loader'),
+  emptyState:      document.getElementById('empty-state'),
+  particleCanvas:  document.getElementById('particle-canvas'),
 };
 
 // ─── Difficulty config ────────────────────────────────────────────────────────
 const difficultyConfig = {
-  'Fácil':  { color: 'text-emerald-400', bg: 'bg-emerald-400/10 border-emerald-400/30', dot: '#34d399' },
-  'Media':  { color: 'text-amber-400',   bg: 'bg-amber-400/10 border-amber-400/30',   dot: '#fbbf24' },
-  'Alta':   { color: 'text-rose-400',    bg: 'bg-rose-400/10 border-rose-400/30',     dot: '#fb7185' },
+  'Fácil': { color: 'text-emerald-400', bg: 'bg-emerald-400/10 border-emerald-400/30', dot: '#34d399' },
+  'Media': { color: 'text-amber-400',   bg: 'bg-amber-400/10 border-amber-400/30',     dot: '#fbbf24' },
+  'Alta':  { color: 'text-rose-400',    bg: 'bg-rose-400/10 border-rose-400/30',       dot: '#fb7185' },
 };
 
 // ─── Particle Background ──────────────────────────────────────────────────────
@@ -47,27 +47,21 @@ function initParticles() {
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
   let particles = [];
-  let animId;
 
   function resize() {
-    canvas.width = window.innerWidth;
+    canvas.width  = window.innerWidth;
     canvas.height = window.innerHeight;
   }
 
   function createParticle() {
     return {
-      x: Math.random() * canvas.width,
-      y: Math.random() * canvas.height,
-      r: Math.random() * 1.5 + 0.3,
-      dx: (Math.random() - 0.5) * 0.25,
-      dy: (Math.random() - 0.5) * 0.25,
+      x:       Math.random() * canvas.width,
+      y:       Math.random() * canvas.height,
+      r:       Math.random() * 1.5 + 0.3,
+      dx:      (Math.random() - 0.5) * 0.25,
+      dy:      (Math.random() - 0.5) * 0.25,
       opacity: Math.random() * 0.5 + 0.1,
     };
-  }
-
-  function init() {
-    resize();
-    particles = Array.from({ length: 90 }, createParticle);
   }
 
   function draw() {
@@ -79,113 +73,21 @@ function initParticles() {
       ctx.fill();
       p.x += p.dx;
       p.y += p.dy;
-      if (p.x < 0 || p.x > canvas.width) p.dx *= -1;
+      if (p.x < 0 || p.x > canvas.width)  p.dx *= -1;
       if (p.y < 0 || p.y > canvas.height) p.dy *= -1;
     });
-    animId = requestAnimationFrame(draw);
+    requestAnimationFrame(draw);
   }
 
-  window.addEventListener('resize', () => { resize(); });
-  init();
+  window.addEventListener('resize', resize);
+  resize();
+  particles = Array.from({ length: 90 }, createParticle);
   draw();
 }
 
-// ─── Inline fallback data (used if games.json cannot be fetched) ───────────────
-const FALLBACK_GAMES = [
-  {
-    "id": 1,
-    "title": "Desafío de Ciberseguridad",
-    "description": "Un juego interactivo donde aprenderás a identificar amenazas digitales, crear contraseñas robustas y detectar intentos de phishing en situaciones de la vida real.",
-    "tags": ["Ciberseguridad", "Contraseñas", "Phishing"],
-    "playtime": "15 min",
-    "difficulty": "Media",
-    "thumbnail": "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=600&q=80",
-    "screenshot": "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=1200&q=90",
-    "geniallyUrl": "https://view.genially.com/example1"
-  },
-  {
-    "id": 2,
-    "title": "Guardianes de la Privacidad",
-    "description": "Explora el mundo de la privacidad en línea y aprende qué datos personales debes proteger. Toma decisiones en tiempo real sobre permisos de aplicaciones y configuraciones de redes sociales.",
-    "tags": ["Privacidad", "Datos Personales", "Redes Sociales"],
-    "playtime": "20 min",
-    "difficulty": "Fácil",
-    "thumbnail": "https://images.unsplash.com/photo-1563986768609-322da13575f3?w=600&q=80",
-    "screenshot": "https://images.unsplash.com/photo-1563986768609-322da13575f3?w=1200&q=90",
-    "geniallyUrl": "https://view.genially.com/example2"
-  },
-  {
-    "id": 3,
-    "title": "El Arte de la Netiqueta",
-    "description": "Navega situaciones sociales en el mundo digital y aprende las reglas no escritas de la comunicación en línea. Desde foros y correos hasta redes sociales.",
-    "tags": ["Netiqueta", "Comunicación", "Respeto Digital"],
-    "playtime": "12 min",
-    "difficulty": "Fácil",
-    "thumbnail": "https://images.unsplash.com/photo-1516321497487-e288fb19713f?w=600&q=80",
-    "screenshot": "https://images.unsplash.com/photo-1516321497487-e288fb19713f?w=1200&q=90",
-    "geniallyUrl": "https://view.genially.com/example3"
-  },
-  {
-    "id": 4,
-    "title": "Derechos en la Red",
-    "description": "Un recorrido interactivo por los derechos y responsabilidades que tienes como usuario de internet. Aprende sobre propiedad intelectual y libertad de expresión responsable.",
-    "tags": ["Derechos Digitales", "Propiedad Intelectual", "Ética"],
-    "playtime": "25 min",
-    "difficulty": "Alta",
-    "thumbnail": "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=600&q=80",
-    "screenshot": "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=1200&q=90",
-    "geniallyUrl": "https://view.genially.com/example4"
-  },
-  {
-    "id": 5,
-    "title": "Detector de Fake News",
-    "description": "Conviértete en un detective de la información y aprende a distinguir noticias verdaderas de falsas. Analiza fuentes y desarrolla el pensamiento crítico necesario.",
-    "tags": ["Desinformación", "Pensamiento Crítico", "Fuentes"],
-    "playtime": "18 min",
-    "difficulty": "Media",
-    "thumbnail": "https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=600&q=80",
-    "screenshot": "https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=1200&q=90",
-    "geniallyUrl": "https://view.genially.com/example5"
-  },
-  {
-    "id": 6,
-    "title": "Huella Digital: Tu Legado Online",
-    "description": "Descubre cómo cada acción en línea deja una marca permanente. Aprende a gestionar tu identidad digital y proteger tu reputación a largo plazo.",
-    "tags": ["Huella Digital", "Identidad Online", "Reputación"],
-    "playtime": "22 min",
-    "difficulty": "Media",
-    "thumbnail": "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=600&q=80",
-    "screenshot": "https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=1200&q=90",
-    "geniallyUrl": "https://view.genially.com/example6"
-  },
-  {
-    "id": 7,
-    "title": "Seguridad en Redes WiFi",
-    "description": "Aprende a conectarte de forma segura en redes públicas y privadas. Explora los riesgos de las redes abiertas y las mejores prácticas para proteger tus dispositivos.",
-    "tags": ["Ciberseguridad", "WiFi", "VPN"],
-    "playtime": "14 min",
-    "difficulty": "Media",
-    "thumbnail": "https://images.unsplash.com/photo-1544197150-b99a580bb7a8?w=600&q=80",
-    "screenshot": "https://images.unsplash.com/photo-1544197150-b99a580bb7a8?w=1200&q=90",
-    "geniallyUrl": "https://view.genially.com/example7"
-  },
-  {
-    "id": 8,
-    "title": "Convivencia Digital",
-    "description": "Un simulador de situaciones de ciberacoso y conflictos en línea. Aprende a identificar, prevenir y actuar ante el bullying digital y desarrolla empatía.",
-    "tags": ["Ciberacoso", "Empatía", "Convivencia"],
-    "playtime": "30 min",
-    "difficulty": "Alta",
-    "thumbnail": "https://images.unsplash.com/photo-1573164713714-d95e436ab8d6?w=600&q=80",
-    "screenshot": "https://images.unsplash.com/photo-1573164713714-d95e436ab8d6?w=1200&q=90",
-    "geniallyUrl": "https://view.genially.com/example8"
-  }
-];
-
-// ─── Google Sheets TSV source ─────────────────────────────────────────────────
+// ─── Google Sheets TSV ───────────────────────────────────────────────────────
 const SHEETS_TSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vROrr3WszHFXRmGgon-X1ihbVD7WjERxs3vKZ04foAKlqPqRDhW6a5nvqJn7Hj2A0UtCUIzsGoYzCU0/pub?gid=420182280&single=true&output=tsv';
 
-// Maps exact column names from the Sheet → internal JS keys
 const HEADER_MAP = {
   'autor':           'author',
   'título':          'title',
@@ -196,19 +98,17 @@ const HEADER_MAP = {
   'tiempo de juego': 'playtime',
   'dificultad':      'difficulty',
   'url de genially': 'geniallyUrl',
-  // English aliases (just in case)
-  'author':          'author',
-  'title':           'title',
-  'description':     'description',
-  'playtime':        'playtime',
-  'difficulty':      'difficulty',
-  'geniallyurl':     'geniallyUrl',
+  // English aliases
+  'author':      'author',
+  'title':       'title',
+  'description': 'description',
+  'playtime':    'playtime',
+  'difficulty':  'difficulty',
+  'geniallyurl': 'geniallyUrl',
 };
 
-const PLACEHOLDER_IMG = 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&q=80';
-
 function parseTSV(text) {
-  // Normalize line endings and strip BOM (Google Sheets adds \ufeff at start)
+  // Strip BOM (\ufeff) that Google Sheets adds, normalize line endings
   const cleaned = text.replace(/^\ufeff/, '').trim().replace(/\r\n/g, '\n').replace(/\r/g, '\n');
   const lines = cleaned.split('\n');
   if (lines.length < 2) return [];
@@ -216,46 +116,70 @@ function parseTSV(text) {
   const rawHeaders = lines[0].split('\t').map(h => h.trim().toLowerCase());
   const headers = rawHeaders.map(h => HEADER_MAP[h] || h);
 
+  console.log('Headers detectados:', headers);
+
   return lines.slice(1)
     .filter(line => line.trim() !== '')
     .map((line, i) => {
-      const rowNumber = i + 1; // 1-based, matches /img/1.png
       const cols = line.split('\t');
-      const obj = { id: rowNumber };
+      const obj  = { id: i + 1 };
 
       headers.forEach((key, idx) => {
         obj[key] = (cols[idx] || '').trim();
       });
 
-      // Merge tag1/tag2/tag3 into a tags array
+      // Merge tag1/tag2/tag3 → tags array
       obj.tags = [obj.tag1, obj.tag2, obj.tag3].filter(Boolean);
       delete obj.tag1; delete obj.tag2; delete obj.tag3;
 
-      // Images: always /img/{rowNumber}.png
-      // Falls back to placeholder if the file doesn't exist (handled by onerror in HTML)
-      obj.thumbnail  = `./img/${rowNumber}.png`;
-      obj.screenshot = `./img/${rowNumber}.png`;
+      // Images: /img/{id}.png — onerror in HTML handles missing files
+      obj.thumbnail  = `./img/${obj.id}.png`;
+      obj.screenshot = `./img/${obj.id}.png`;
 
+      console.log(`Juego ${obj.id} parseado:`, obj);
       return obj;
     })
-    .filter(g => g.title); // skip completely empty rows
+    .filter(g => g.title);
+}
+
+// ─── localStorage Cache ───────────────────────────────────────────────────────
+const CACHE_KEY = 'ciudadania_digital_games';
+
+function saveToCache(games) {
+  try {
+    localStorage.setItem(CACHE_KEY, JSON.stringify({ timestamp: Date.now(), games }));
+    console.info('✓ Juegos guardados en caché local.');
+  } catch (e) {
+    console.warn('No se pudo guardar en caché:', e.message);
+  }
+}
+
+function loadFromCache() {
+  try {
+    const raw = localStorage.getItem(CACHE_KEY);
+    if (!raw) return null;
+    const { games, timestamp } = JSON.parse(raw);
+    const age = Math.round((Date.now() - timestamp) / 60000);
+    console.info(`✓ Caché encontrado (hace ${age} min). Usando datos guardados.`);
+    return games;
+  } catch (e) {
+    return null;
+  }
 }
 
 // ─── Fetch Games ──────────────────────────────────────────────────────────────
 async function loadGames() {
   showLoader(true);
   try {
-    let loaded = false;
-
-    // ── 1. Google Sheets TSV (primary source) ──────────────────
+    // 1. Google Sheets TSV (fuente principal)
     try {
       const res = await fetch(SHEETS_TSV_URL);
       if (res.ok) {
-        const text = await res.text();
+        const text   = await res.text();
         const parsed = parseTSV(text);
         if (parsed.length > 0) {
           state.games = parsed;
-          loaded = true;
+          saveToCache(parsed);
           console.info(`✓ ${parsed.length} juegos cargados desde Google Sheets.`);
         }
       }
@@ -263,28 +187,18 @@ async function loadGames() {
       console.warn('Google Sheets no disponible:', e.message);
     }
 
-    // ── 2. Local games.json (secondary fallback) ───────────────
-    if (!loaded) {
-      for (const path of ['./games.json', 'games.json']) {
-        try {
-          const res = await fetch(path);
-          if (res.ok) {
-            const data = await res.json();
-            if (Array.isArray(data) && data.length > 0) {
-              state.games = data;
-              loaded = true;
-              console.info('✓ Juegos cargados desde games.json (fallback local).');
-              break;
-            }
-          }
-        } catch (_) { /* try next */ }
+    // 2. Caché local (si el Sheet falló o devolvió vacío)
+    if (state.games.length === 0) {
+      const cached = loadFromCache();
+      if (cached && cached.length > 0) {
+        state.games = cached;
+        console.info('Usando última versión guardada del portal.');
       }
     }
 
-    // ── 3. Inline data (last resort) ──────────────────────────
-    if (!loaded) {
-      console.info('Usando datos integrados (fallback final).');
-      state.games = FALLBACK_GAMES;
+    // 3. Sin datos en absoluto → mostrar error de conexión
+    if (state.games.length === 0) {
+      showConnectionError();
     }
 
     state.filtered = [...state.games];
@@ -292,9 +206,14 @@ async function loadGames() {
 
   } catch (err) {
     console.error('Error inesperado en loadGames:', err);
-    state.games = FALLBACK_GAMES;
-    state.filtered = [...state.games];
-    renderGrid(state.filtered);
+    const cached = loadFromCache();
+    if (cached && cached.length > 0) {
+      state.games    = cached;
+      state.filtered = [...cached];
+      renderGrid(state.filtered);
+    } else {
+      showConnectionError();
+    }
   } finally {
     showLoader(false);
   }
@@ -316,10 +235,7 @@ function renderGrid(games) {
   updateCount(games.length);
 
   const fragment = document.createDocumentFragment();
-  games.forEach((game, i) => {
-    const card = createCard(game, i);
-    fragment.appendChild(card);
-  });
+  games.forEach((game, i) => fragment.appendChild(createCard(game, i)));
   dom.grid.appendChild(fragment);
 }
 
@@ -331,10 +247,8 @@ function createCard(game, index) {
   card.setAttribute('tabindex', '0');
   card.setAttribute('aria-label', `Abrir detalles de ${game.title}`);
 
-  const diff = difficultyConfig[game.difficulty] || difficultyConfig['Media'];
-  const tagsHtml = game.tags.slice(0, 3).map(t =>
-    `<span class="tag-chip">${t}</span>`
-  ).join('');
+  const diff     = difficultyConfig[game.difficulty] || difficultyConfig['Media'];
+  const tagsHtml = game.tags.slice(0, 3).map(t => `<span class="tag-chip">${t}</span>`).join('');
 
   card.innerHTML = `
     <div class="card-thumb-wrap">
@@ -343,7 +257,7 @@ function createCard(game, index) {
         alt="${game.title}"
         class="card-thumb"
         loading="lazy"
-        onerror="this.src='https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&q=80'"
+        onerror="this.onerror=null;this.src='https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&q=80'"
       />
       <div class="card-hover-overlay">
         <span class="overlay-label">
@@ -389,31 +303,27 @@ function openModal(game) {
   state.activeGame = game;
   const diff = difficultyConfig[game.difficulty] || difficultyConfig['Media'];
 
-  dom.modalImg.src = game.screenshot;
-  dom.modalImg.alt = game.title;
+  dom.modalImg.src     = game.screenshot;
+  dom.modalImg.alt     = game.title;
   dom.modalTitle.textContent = game.title;
-  dom.modalDesc.textContent = game.description;
+  dom.modalDesc.textContent  = game.description;
 
-  // Author
-  let authorEl = document.getElementById('modal-author');
+  const authorEl = document.getElementById('modal-author');
   if (authorEl) authorEl.textContent = game.author || 'Anónimo';
-  dom.modalPlaytime.textContent = game.playtime;
 
-  dom.modalDifficulty.textContent = game.difficulty;
-  dom.modalDifficulty.className = `meta-badge border ${diff.bg} ${diff.color}`;
+  dom.modalPlaytime.textContent    = game.playtime;
+  dom.modalDifficulty.textContent  = game.difficulty;
+  dom.modalDifficulty.className    = `meta-badge border ${diff.bg} ${diff.color}`;
 
-  dom.modalTags.innerHTML = game.tags.map(t =>
-    `<span class="modal-tag">${t}</span>`
-  ).join('');
+  dom.modalTags.innerHTML = game.tags.map(t => `<span class="modal-tag">${t}</span>`).join('');
 
   dom.modal.classList.remove('modal-hidden');
   dom.modal.classList.add('modal-visible');
   document.body.style.overflow = 'hidden';
 
-  // reset play button
-  dom.playBtn.classList.remove('btn-launching');
+  dom.playBtn.classList.remove('btn-launching', 'btn-launched');
   dom.playBtn.textContent = '¡Jugar!';
-  dom.playBtn.disabled = false;
+  dom.playBtn.disabled    = false;
 }
 
 function closeModal() {
@@ -433,13 +343,8 @@ function handlePlay() {
 
   const btn = dom.playBtn;
   btn.disabled = true;
-  btn.innerHTML = `
-    <span class="btn-spinner"></span>
-    Iniciando…
-  `;
+  btn.innerHTML = `<span class="btn-spinner"></span> Iniciando…`;
   btn.classList.add('btn-launching');
-
-  // glitch/scale effect on screenshot
   dom.modalImg.classList.add('img-launch-fx');
 
   setTimeout(() => {
@@ -456,7 +361,7 @@ function handlePlay() {
     setTimeout(() => {
       btn.classList.remove('btn-launched');
       btn.textContent = '¡Jugar!';
-      btn.disabled = false;
+      btn.disabled    = false;
     }, 2000);
   }, 380);
 }
@@ -467,15 +372,15 @@ function handleSearch(e) {
   state.searchQuery = q;
   dom.searchClear.classList.toggle('hidden', q === '');
 
-  if (q === '') {
-    state.filtered = [...state.games];
-  } else {
-    state.filtered = state.games.filter(g =>
-      g.title.toLowerCase().includes(q) ||
-      g.description.toLowerCase().includes(q) ||
-      g.tags.some(t => t.toLowerCase().includes(q))
-    );
-  }
+  state.filtered = q === ''
+    ? [...state.games]
+    : state.games.filter(g =>
+        g.title.toLowerCase().includes(q) ||
+        g.description.toLowerCase().includes(q) ||
+        g.tags.some(t => t.toLowerCase().includes(q)) ||
+        (g.author || '').toLowerCase().includes(q)
+      );
+
   renderGrid(state.filtered);
 }
 
@@ -483,7 +388,7 @@ function clearSearch() {
   dom.searchInput.value = '';
   dom.searchClear.classList.add('hidden');
   state.searchQuery = '';
-  state.filtered = [...state.games];
+  state.filtered    = [...state.games];
   renderGrid(state.filtered);
   dom.searchInput.focus();
 }
@@ -494,22 +399,9 @@ function showLoader(show) {
   dom.grid.classList.toggle('hidden', show);
 }
 
-function showErrorState() {
-  dom.grid.innerHTML = `
-    <div class="col-span-full flex flex-col items-center justify-center py-24 text-center gap-4">
-      <div class="text-5xl">⚠️</div>
-      <p class="text-slate-400 text-lg">No se pudo cargar el portal.</p>
-      <p class="text-slate-500 text-sm">Asegúrate de que <code class="text-cyan-400">games.json</code> esté en el mismo directorio.</p>
-      <button onclick="loadGames()" class="mt-2 px-5 py-2 rounded-lg bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 hover:bg-cyan-500/20 transition-colors text-sm">
-        Reintentar
-      </button>
-    </div>
-  `;
-}
-
 function updateCount(n) {
   dom.resultCount.textContent = n === state.games.length
-    ? `${n} juegos disponibles`
+    ? `${n} juego${n !== 1 ? 's' : ''} disponible${n !== 1 ? 's' : ''}`
     : `${n} resultado${n !== 1 ? 's' : ''} encontrado${n !== 1 ? 's' : ''}`;
 }
 
@@ -521,9 +413,7 @@ dom.modalBackdrop.addEventListener('click', closeModal);
 dom.playBtn.addEventListener('click', handlePlay);
 
 document.addEventListener('keydown', e => {
-  if (e.key === 'Escape' && !dom.modal.classList.contains('modal-hidden')) {
-    closeModal();
-  }
+  if (e.key === 'Escape' && !dom.modal.classList.contains('modal-hidden')) closeModal();
 });
 
 // ─── Boot ─────────────────────────────────────────────────────────────────────
