@@ -182,35 +182,122 @@ const FALLBACK_GAMES = [
   }
 ];
 
+// ─── Google Sheets TSV source ─────────────────────────────────────────────────
+const SHEETS_TSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vROrr3WszHFXRmGgon-X1ihbVD7WjERxs3vKZ04foAKlqPqRDhW6a5nvqJn7Hj2A0UtCUIzsGoYzCU0/pub?gid=420182280&single=true&output=tsv';
+
+// Maps Spanish header names from the sheet to internal JS keys
+const HEADER_MAP = {
+  'id': 'id',
+  'título': 'title',
+  'title': 'title',
+  'descripción': 'description',
+  'description': 'description',
+  'etiqueta 1': 'tag1',
+  'etiqueta 2': 'tag2',
+  'etiqueta 3': 'tag3',
+  'etiquetas': 'tags',
+  'tags': 'tags',
+  'tiempo de juego': 'playtime',
+  'playtime': 'playtime',
+  'dificultad': 'difficulty',
+  'difficulty': 'difficulty',
+  'thumbnail': 'thumbnail',
+  'screenshot': 'screenshot',
+  'url de genially': 'geniallyUrl',
+  'url': 'geniallyUrl',
+  'geniallyurl': 'geniallyUrl',
+  'hecho por': 'author',
+  'author': 'author',
+};
+
+const PLACEHOLDER_IMG = 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&q=80';
+
+function parseTSV(text) {
+  const lines = text.trim().split('\n');
+  if (lines.length < 2) return [];
+
+  const rawHeaders = lines[0].split('\t').map(h => h.trim().toLowerCase());
+  const headers = rawHeaders.map(h => HEADER_MAP[h] || h);
+
+  return lines.slice(1)
+    .filter(line => line.trim() !== '')
+    .map((line, i) => {
+      const cols = line.split('\t');
+      const obj = { id: i + 1 };
+
+      headers.forEach((key, idx) => {
+        obj[key] = (cols[idx] || '').trim();
+      });
+
+      // Handle tags: either a single "tags" column (comma-separated)
+      // or separate "tag1", "tag2", "tag3" columns
+      if (obj.tags) {
+        obj.tags = obj.tags.split(',').map(t => t.trim()).filter(Boolean);
+      } else {
+        obj.tags = [obj.tag1, obj.tag2, obj.tag3].filter(Boolean);
+        delete obj.tag1; delete obj.tag2; delete obj.tag3;
+      }
+
+      // Fallback images if empty
+      if (!obj.thumbnail) obj.thumbnail = PLACEHOLDER_IMG;
+      if (!obj.screenshot) obj.screenshot = obj.thumbnail;
+
+      return obj;
+    })
+    .filter(g => g.title); // skip blank rows
+}
+
 // ─── Fetch Games ──────────────────────────────────────────────────────────────
 async function loadGames() {
   showLoader(true);
   try {
-    // Try multiple path variants to handle different hosting setups
-    const paths = ['./games.json', 'games.json', '/games.json'];
     let loaded = false;
-    for (const path of paths) {
-      try {
-        const res = await fetch(path);
-        if (res.ok) {
-          const contentType = res.headers.get('content-type') || '';
-          if (contentType.includes('json') || contentType.includes('text')) {
-            state.games = await res.json();
-            loaded = true;
-            break;
-          }
+
+    // ── 1. Google Sheets TSV (primary source) ──────────────────
+    try {
+      const res = await fetch(SHEETS_TSV_URL);
+      if (res.ok) {
+        const text = await res.text();
+        const parsed = parseTSV(text);
+        if (parsed.length > 0) {
+          state.games = parsed;
+          loaded = true;
+          console.info(`✓ ${parsed.length} juegos cargados desde Google Sheets.`);
         }
-      } catch (_) { /* try next path */ }
+      }
+    } catch (e) {
+      console.warn('Google Sheets no disponible:', e.message);
     }
+
+    // ── 2. Local games.json (secondary fallback) ───────────────
     if (!loaded) {
-      console.info('games.json not found via fetch — using built-in data.');
+      for (const path of ['./games.json', 'games.json']) {
+        try {
+          const res = await fetch(path);
+          if (res.ok) {
+            const data = await res.json();
+            if (Array.isArray(data) && data.length > 0) {
+              state.games = data;
+              loaded = true;
+              console.info('✓ Juegos cargados desde games.json (fallback local).');
+              break;
+            }
+          }
+        } catch (_) { /* try next */ }
+      }
+    }
+
+    // ── 3. Inline data (last resort) ──────────────────────────
+    if (!loaded) {
+      console.info('Usando datos integrados (fallback final).');
       state.games = FALLBACK_GAMES;
     }
+
     state.filtered = [...state.games];
     renderGrid(state.filtered);
+
   } catch (err) {
-    console.error('Unexpected error in loadGames:', err);
-    // Last resort: always show something
+    console.error('Error inesperado en loadGames:', err);
     state.games = FALLBACK_GAMES;
     state.filtered = [...state.games];
     renderGrid(state.filtered);
