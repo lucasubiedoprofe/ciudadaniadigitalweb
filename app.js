@@ -185,35 +185,32 @@ const FALLBACK_GAMES = [
 // ─── Google Sheets TSV source ─────────────────────────────────────────────────
 const SHEETS_TSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vROrr3WszHFXRmGgon-X1ihbVD7WjERxs3vKZ04foAKlqPqRDhW6a5nvqJn7Hj2A0UtCUIzsGoYzCU0/pub?gid=420182280&single=true&output=tsv';
 
-// Maps Spanish header names from the sheet to internal JS keys
+// Maps exact column names from the Sheet → internal JS keys
 const HEADER_MAP = {
-  'id': 'id',
-  'título': 'title',
-  'title': 'title',
-  'descripción': 'description',
-  'description': 'description',
-  'etiqueta 1': 'tag1',
-  'etiqueta 2': 'tag2',
-  'etiqueta 3': 'tag3',
-  'etiquetas': 'tags',
-  'tags': 'tags',
+  'autor':           'author',
+  'título':          'title',
+  'descripción':     'description',
+  'etiqueta 1':      'tag1',
+  'etiqueta 2':      'tag2',
+  'etiqueta 3':      'tag3',
   'tiempo de juego': 'playtime',
-  'playtime': 'playtime',
-  'dificultad': 'difficulty',
-  'difficulty': 'difficulty',
-  'thumbnail': 'thumbnail',
-  'screenshot': 'screenshot',
+  'dificultad':      'difficulty',
   'url de genially': 'geniallyUrl',
-  'url': 'geniallyUrl',
-  'geniallyurl': 'geniallyUrl',
-  'hecho por': 'author',
-  'author': 'author',
+  // English aliases (just in case)
+  'author':          'author',
+  'title':           'title',
+  'description':     'description',
+  'playtime':        'playtime',
+  'difficulty':      'difficulty',
+  'geniallyurl':     'geniallyUrl',
 };
 
 const PLACEHOLDER_IMG = 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&q=80';
 
 function parseTSV(text) {
-  const lines = text.trim().split('\n');
+  // Normalize line endings and strip BOM (Google Sheets adds \ufeff at start)
+  const cleaned = text.replace(/^\ufeff/, '').trim().replace(/\r\n/g, '\n').replace(/\r/g, '\n');
+  const lines = cleaned.split('\n');
   if (lines.length < 2) return [];
 
   const rawHeaders = lines[0].split('\t').map(h => h.trim().toLowerCase());
@@ -222,29 +219,26 @@ function parseTSV(text) {
   return lines.slice(1)
     .filter(line => line.trim() !== '')
     .map((line, i) => {
+      const rowNumber = i + 1; // 1-based, matches /img/1.png
       const cols = line.split('\t');
-      const obj = { id: i + 1 };
+      const obj = { id: rowNumber };
 
       headers.forEach((key, idx) => {
         obj[key] = (cols[idx] || '').trim();
       });
 
-      // Handle tags: either a single "tags" column (comma-separated)
-      // or separate "tag1", "tag2", "tag3" columns
-      if (obj.tags) {
-        obj.tags = obj.tags.split(',').map(t => t.trim()).filter(Boolean);
-      } else {
-        obj.tags = [obj.tag1, obj.tag2, obj.tag3].filter(Boolean);
-        delete obj.tag1; delete obj.tag2; delete obj.tag3;
-      }
+      // Merge tag1/tag2/tag3 into a tags array
+      obj.tags = [obj.tag1, obj.tag2, obj.tag3].filter(Boolean);
+      delete obj.tag1; delete obj.tag2; delete obj.tag3;
 
-      // Fallback images if empty
-      if (!obj.thumbnail) obj.thumbnail = PLACEHOLDER_IMG;
-      if (!obj.screenshot) obj.screenshot = obj.thumbnail;
+      // Images: always /img/{rowNumber}.png
+      // Falls back to placeholder if the file doesn't exist (handled by onerror in HTML)
+      obj.thumbnail  = `./img/${rowNumber}.png`;
+      obj.screenshot = `./img/${rowNumber}.png`;
 
       return obj;
     })
-    .filter(g => g.title); // skip blank rows
+    .filter(g => g.title); // skip completely empty rows
 }
 
 // ─── Fetch Games ──────────────────────────────────────────────────────────────
